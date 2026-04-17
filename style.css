@@ -8,6 +8,9 @@
   --accent-3: #ff7a59;
   --shadow: 0 14px 30px rgba(35, 50, 120, 0.12);
   --radius: 18px;
+  --hero-blob-1: min(16vw, 120px);
+  --hero-blob-2: min(18vw, 140px);
+  --hero-blob-3: min(24vw, 180px);
 }
 
 * {
@@ -50,9 +53,9 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at 10% 15%, rgba(124, 92, 255, 0.2) 0 min(16vw, 120px), transparent calc(min(16vw, 120px) + 1px)),
-    radial-gradient(circle at 80% 25%, rgba(0, 194, 168, 0.2) 0 min(18vw, 140px), transparent calc(min(18vw, 140px) + 1px)),
-    radial-gradient(circle at 70% 80%, rgba(255, 122, 89, 0.18) 0 min(24vw, 180px), transparent calc(min(24vw, 180px) + 1px));
+  background-image: radial-gradient(circle at 10% 15%, rgba(124, 92, 255, 0.2) 0 var(--hero-blob-1), transparent calc(var(--hero-blob-1) + 1px)),
+    radial-gradient(circle at 80% 25%, rgba(0, 194, 168, 0.2) 0 var(--hero-blob-2), transparent calc(var(--hero-blob-2) + 1px)),
+    radial-gradient(circle at 70% 80%, rgba(255, 122, 89, 0.18) 0 var(--hero-blob-3), transparent calc(var(--hero-blob-3) + 1px));
   pointer-events: none;
 }
 
