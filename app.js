@@ -1,4 +1,11 @@
 const STORAGE_KEY = 'multimodalPortfolioSlides';
+const FONT_WEIGHT_BOLD = '700';
+const FONT_WEIGHT_NORMAL = '400';
+const FONT_STYLE_ITALIC = 'italic';
+const FONT_STYLE_NORMAL = 'normal';
+const TEXT_DECORATION_UNDERLINE = 'underline';
+const TEXT_DECORATION_NONE = 'none';
+const SAFE_TEXT_TAGS = new Set(['h1', 'h2', 'h3', 'p', 'div', 'span', 'strong', 'em', 'u', 'b', 'i', 'br', 'ul', 'ol', 'li']);
 const canvas = document.getElementById('slide-canvas');
 const slideList = document.getElementById('slide-list');
 const addTextBtn = document.getElementById('add-text-btn');
@@ -15,9 +22,14 @@ let slides = loadSlides();
 let currentSlideIndex = 0;
 let selectedElementId = null;
 let dragState = null;
+let isDirty = false;
+let autoSaveTimer = null;
 
 function makeId(prefix = 'el') {
-  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return `${prefix}-${window.crypto.randomUUID()}`;
+  }
+  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
 }
 
 function defaultSlides() {
@@ -133,20 +145,59 @@ function defaultSlides() {
   ];
 }
 
+function markDirty() {
+  isDirty = true;
+  if (autoSaveTimer) {
+    clearTimeout(autoSaveTimer);
+  }
+  autoSaveTimer = setTimeout(() => saveSlides(), 1200);
+}
+
+function sanitizeHtml(input = '') {
+  const template = document.createElement('template');
+  template.innerHTML = input;
+  const nodes = template.content.querySelectorAll('*');
+  nodes.forEach((node) => {
+    const tagName = node.tagName.toLowerCase();
+    if (!SAFE_TEXT_TAGS.has(tagName)) {
+      const textNode = document.createTextNode(node.textContent || '');
+      node.replaceWith(textNode);
+      return;
+    }
+    [...node.attributes].forEach((attribute) => {
+      node.removeAttribute(attribute.name);
+    });
+  });
+  return template.innerHTML;
+}
+
 function loadSlides() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultSlides();
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed) || parsed.length !== 4) return defaultSlides();
+    const hasValidShape = Array.isArray(parsed) && parsed.length > 0 && parsed.every((slide) =>
+      slide &&
+      typeof slide.id === 'string' &&
+      typeof slide.title === 'string' &&
+      typeof slide.background === 'string' &&
+      Array.isArray(slide.elements)
+    );
+    if (!hasValidShape) return defaultSlides();
     return parsed;
   } catch (error) {
     return defaultSlides();
   }
 }
 
-function saveSlides() {
+function saveSlides(force = false) {
+  if (!force && !isDirty) return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(slides));
+  isDirty = false;
+  if (autoSaveTimer) {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = null;
+  }
 }
 
 function getCurrentSlide() {
@@ -172,6 +223,9 @@ function renderSlideList() {
 function applyElementStyle(node, style = {}) {
   if (style.color) node.style.color = style.color;
   if (style.fontSize) node.style.fontSize = style.fontSize;
+  if (style.fontWeight) node.style.fontWeight = style.fontWeight;
+  if (style.fontStyle) node.style.fontStyle = style.fontStyle;
+  if (style.textDecoration) node.style.textDecoration = style.textDecoration;
 }
 
 function clampElementBounds(element, slideWidth, slideHeight) {
@@ -211,11 +265,11 @@ function renderCanvas() {
       content.draggable = false;
     } else {
       content.contentEditable = 'true';
-      content.innerHTML = element.html;
+      content.innerHTML = sanitizeHtml(element.html);
       applyElementStyle(content, element.style);
       content.addEventListener('input', () => {
-        element.html = content.innerHTML;
-        saveSlides();
+        element.html = sanitizeHtml(content.innerHTML);
+        markDirty();
       });
       content.addEventListener('focus', () => {
         selectedElementId = element.id;
@@ -345,7 +399,7 @@ function pointerMove(event) {
 function pointerUp() {
   if (!dragState) return;
   dragState = null;
-  saveSlides();
+  markDirty();
 }
 
 function addTextElement() {
@@ -360,7 +414,7 @@ function addTextElement() {
     html: '<p>New text box</p>',
     style: { color: '#111111', fontSize: '16px' }
   });
-  saveSlides();
+  markDirty();
   render();
 }
 
@@ -377,20 +431,10 @@ function addImageElement(file) {
       height: 220,
       src: reader.result
     });
-    saveSlides();
+    markDirty();
     render();
   };
   reader.readAsDataURL(file);
-}
-
-function applyTextCommand(command, value = null) {
-  document.execCommand(command, false, value);
-  const selected = getElementById(selectedElementId);
-  if (selected && selected.type === 'text') {
-    const node = canvas.querySelector(`[data-element-id="${selectedElementId}"] .content`);
-    selected.html = node ? node.innerHTML : selected.html;
-    saveSlides();
-  }
 }
 
 function setTextStyle(property, value) {
@@ -398,8 +442,16 @@ function setTextStyle(property, value) {
   if (!selected || selected.type !== 'text') return;
   selected.style = selected.style || {};
   selected.style[property] = value;
-  saveSlides();
+  markDirty();
   renderCanvas();
+}
+
+function toggleTextStyle(property, activeValue, inactiveValue) {
+  const selected = getElementById(selectedElementId);
+  if (!selected || selected.type !== 'text') return;
+  const currentValue = (selected.style && selected.style[property]) || '';
+  const nextValue = currentValue === activeValue ? inactiveValue : activeValue;
+  setTextStyle(property, nextValue);
 }
 
 function deleteSelectedElement() {
@@ -407,13 +459,29 @@ function deleteSelectedElement() {
   if (!selectedElementId) return;
   slide.elements = slide.elements.filter((item) => item.id !== selectedElementId);
   selectedElementId = null;
-  saveSlides();
+  markDirty();
   render();
 }
 
+function sanitizeSlidesForExport(data) {
+  return data.map((slide) => ({
+    ...slide,
+    elements: slide.elements.map((element) => (
+      element.type === 'text'
+        ? { ...element, html: sanitizeHtml(element.html || '') }
+        : { ...element }
+    ))
+  }));
+}
+
 function exportSlides() {
-  const exportData = JSON.stringify(slides);
-  const escapedData = exportData.replace(/</g, '\\u003c');
+  const exportData = JSON.stringify(sanitizeSlidesForExport(slides));
+  const escapedData = exportData
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -439,9 +507,23 @@ function exportSlides() {
 </div>
 <script>
   const slides = ${escapedData};
+  const SAFE_TEXT_TAGS = new Set(['h1','h2','h3','p','div','span','strong','em','u','b','i','br','ul','ol','li']);
   const nav = document.getElementById('nav');
   const slide = document.getElementById('slide');
   let current = 0;
+  function sanitizeHtml(input=''){
+    const template = document.createElement('template');
+    template.innerHTML = input;
+    template.content.querySelectorAll('*').forEach((node)=>{
+      const tagName = node.tagName.toLowerCase();
+      if(!SAFE_TEXT_TAGS.has(tagName)){
+        node.replaceWith(document.createTextNode(node.textContent || ''));
+        return;
+      }
+      [...node.attributes].forEach((attribute)=>node.removeAttribute(attribute.name));
+    });
+    return template.innerHTML;
+  }
   function renderNav(){
     nav.innerHTML='';
     slides.forEach((s,i)=>{
@@ -464,8 +546,14 @@ function exportSlides() {
       if(e.type==='image'){
         const img=document.createElement('img');img.src=e.src;img.alt='Slide image';node.appendChild(img);
       }else{
-        node.innerHTML=e.html;
-        if(e.style){if(e.style.color){node.style.color=e.style.color;}if(e.style.fontSize){node.style.fontSize=e.style.fontSize;}}
+        node.innerHTML=sanitizeHtml(e.html || '');
+        if(e.style){
+          if(e.style.color){node.style.color=e.style.color;}
+          if(e.style.fontSize){node.style.fontSize=e.style.fontSize;}
+          if(e.style.fontWeight){node.style.fontWeight=e.style.fontWeight;}
+          if(e.style.fontStyle){node.style.fontStyle=e.style.fontStyle;}
+          if(e.style.textDecoration){node.style.textDecoration=e.style.textDecoration;}
+        }
       }
       slide.appendChild(node);
     });
@@ -502,14 +590,14 @@ imageInput.addEventListener('change', (event) => {
   imageInput.value = '';
 });
 
-saveBtn.addEventListener('click', saveSlides);
+saveBtn.addEventListener('click', () => saveSlides(true));
 exportBtn.addEventListener('click', exportSlides);
 deleteBtn.addEventListener('click', deleteSelectedElement);
 
 backgroundInput.addEventListener('input', () => {
   const slide = getCurrentSlide();
   slide.background = backgroundInput.value;
-  saveSlides();
+  markDirty();
   renderCanvas();
 });
 
@@ -521,12 +609,12 @@ fontSizeSelect.addEventListener('change', () => {
   setTextStyle('fontSize', `${fontSizeSelect.value}px`);
 });
 
-document.getElementById('bold-btn').addEventListener('click', () => applyTextCommand('bold'));
-document.getElementById('italic-btn').addEventListener('click', () => applyTextCommand('italic'));
-document.getElementById('underline-btn').addEventListener('click', () => applyTextCommand('underline'));
+document.getElementById('bold-btn').addEventListener('click', () => toggleTextStyle('fontWeight', FONT_WEIGHT_BOLD, FONT_WEIGHT_NORMAL));
+document.getElementById('italic-btn').addEventListener('click', () => toggleTextStyle('fontStyle', FONT_STYLE_ITALIC, FONT_STYLE_NORMAL));
+document.getElementById('underline-btn').addEventListener('click', () => toggleTextStyle('textDecoration', TEXT_DECORATION_UNDERLINE, TEXT_DECORATION_NONE));
 
 document.addEventListener('keydown', (event) => {
-  if ((event.key === 'Delete' || event.key === 'Backspace') && selectedElementId) {
+  if (event.key === 'Delete' && selectedElementId) {
     const activeTag = document.activeElement && document.activeElement.tagName;
     const isEditingText = document.activeElement && document.activeElement.isContentEditable;
     if (!isEditingText && activeTag !== 'INPUT' && activeTag !== 'TEXTAREA' && activeTag !== 'SELECT') {
@@ -538,8 +626,7 @@ document.addEventListener('keydown', (event) => {
 
 window.addEventListener('pointermove', pointerMove);
 window.addEventListener('pointerup', pointerUp);
-window.addEventListener('beforeunload', saveSlides);
+window.addEventListener('beforeunload', () => saveSlides(true));
 window.addEventListener('resize', renderCanvas);
 
-setInterval(saveSlides, 3000);
 render();
