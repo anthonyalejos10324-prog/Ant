@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multimodal Writing Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="dot-nav" aria-label="Slide navigation">
+    <a href="#landing" class="dot-link active" data-section="landing" aria-label="Landing"></a>
+    <a href="#toc" class="dot-link" data-section="toc" aria-label="Table of contents"></a>
+    <a href="#essay1" class="dot-link" data-section="essay1" aria-label="Essay 1"></a>
+    <a href="#essay2" class="dot-link" data-section="essay2" aria-label="Essay 2"></a>
+    <a href="#essay3" class="dot-link" data-section="essay3" aria-label="Essay 3"></a>
+    <a href="#reflection" class="dot-link" data-section="reflection" aria-label="Final reflection"></a>
+    <a href="#media" class="dot-link" data-section="media" aria-label="Media gallery"></a>
+    <a href="#credits" class="dot-link" data-section="credits" aria-label="Credits"></a>
+  </nav>
+
+  <main class="slides">
+    <section id="landing" class="slide hero visible">
+      <div class="hero-content fade-in">
+        <p class="eyebrow">Writing Studio Showcase</p>
+        <h1>Multimodal Writing Portfolio</h1>
+        <p class="meta">[Your Name]</p>
+        <p class="meta">[Course Name &amp; Section]</p>
+        <p class="meta">[Semester / Year]</p>
+        <button type="button" id="startButton" class="start-button">Start →</button>
+      </div>
+    </section>
+
+    <section id="toc" class="slide">
+      <div class="section-content fade-in">
+        <h2>Table of Contents</h2>
+        <p class="section-subtitle">Select a slide to jump directly to each portfolio component.</p>
+        <div class="card-grid">
+          <a href="#essay1" class="toc-card"><span>📝</span><strong>Essay 1</strong><small>Drafts + Revision Explanation</small></a>
+          <a href="#essay2" class="toc-card"><span>📚</span><strong>Essay 2</strong><small>Drafts + Revision Explanation</small></a>
+          <a href="#essay3" class="toc-card"><span>✍️</span><strong>Essay 3</strong><small>Drafts + Revision Explanation</small></a>
+          <a href="#reflection" class="toc-card"><span>🧠</span><strong>Final Reflection Essay</strong><small>1.5–2 page reflection</small></a>
+          <a href="#media" class="toc-card"><span>🎨</span><strong>Media Gallery</strong><small>Images, infographic, and media embed</small></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="essay1" class="slide">
+      <div class="section-content fade-in">
+        <h2>Essay 1</h2>
+        <div class="essay-card">
+          <div class="tabs" role="tablist" aria-label="Essay 1 draft tabs">
+            <button class="tab active" data-panel="essay1-initial" role="tab" aria-selected="true">Initial Draft</button>
+            <button class="tab" data-panel="essay1-submitted" role="tab" aria-selected="false">Submitted Draft</button>
+            <button class="tab" data-panel="essay1-revised" role="tab" aria-selected="false">Revised Draft</button>
+          </div>
+          <div id="essay1-initial" class="tab-panel active" role="tabpanel">
+            <p>[Paste your initial draft here]</p>
+          </div>
+          <div id="essay1-submitted" class="tab-panel" role="tabpanel">
+            <p>[Paste your submitted draft here]</p>
+          </div>
+          <div id="essay1-revised" class="tab-panel" role="tabpanel">
+            <p>[Paste your revised draft here]</p>
+          </div>
+          <div class="revision-note">
+            <h3>Revision Explanation</h3>
+            <p>[Write a one-paragraph explanation of your revision process for Essay 1]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="essay2" class="slide">
+      <div class="section-content fade-in">
+        <h2>Essay 2</h2>
+        <div class="essay-card">
+          <div class="tabs" role="tablist" aria-label="Essay 2 draft tabs">
+            <button class="tab active" data-panel="essay2-initial" role="tab" aria-selected="true">Initial Draft</button>
+            <button class="tab" data-panel="essay2-submitted" role="tab" aria-selected="false">Submitted Draft</button>
+            <button class="tab" data-panel="essay2-revised" role="tab" aria-selected="false">Revised Draft</button>
+          </div>
+          <div id="essay2-initial" class="tab-panel active" role="tabpanel">
+            <p>[Paste your initial draft here]</p>
+          </div>
+          <div id="essay2-submitted" class="tab-panel" role="tabpanel">
+            <p>[Paste your submitted draft here]</p>
+          </div>
+          <div id="essay2-revised" class="tab-panel" role="tabpanel">
+            <p>[Paste your revised draft here]</p>
+          </div>
+          <div class="revision-note">
+            <h3>Revision Explanation</h3>
+            <p>[Write a one-paragraph explanation of your revision process for Essay 2]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="essay3" class="slide">
+      <div class="section-content fade-in">
+        <h2>Essay 3</h2>
+        <div class="essay-card">
+          <div class="tabs" role="tablist" aria-label="Essay 3 draft tabs">
+            <button class="tab active" data-panel="essay3-initial" role="tab" aria-selected="true">Initial Draft</button>
+            <button class="tab" data-panel="essay3-submitted" role="tab" aria-selected="false">Submitted Draft</button>
+            <button class="tab" data-panel="essay3-revised" role="tab" aria-selected="false">Revised Draft</button>
+          </div>
+          <div id="essay3-initial" class="tab-panel active" role="tabpanel">
+            <p>[Paste your initial draft here]</p>
+          </div>
+          <div id="essay3-submitted" class="tab-panel" role="tabpanel">
+            <p>[Paste your submitted draft here]</p>
+          </div>
+          <div id="essay3-revised" class="tab-panel" role="tabpanel">
+            <p>[Paste your revised draft here]</p>
+          </div>
+          <div class="revision-note">
+            <h3>Revision Explanation</h3>
+            <p>[Write a one-paragraph explanation of your revision process for Essay 3]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reflection" class="slide">
+      <div class="section-content fade-in">
+        <h2>Final Reflection Essay</h2>
+        <article class="feature-card">
+          <p>[Write your 1.5–2 page reflection essay here.]</p>
+          <p>Include all required topics:</p>
+          <ol>
+            <li>Experience and process as a critical reader</li>
+            <li>Identity as a writer — including growth and goals</li>
+            <li>How reading and writing communicate worldview</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section id="media" class="slide">
+      <div class="section-content fade-in">
+        <h2>Media Gallery</h2>
+        <div class="media-grid">
+          <figure class="media-card">
+            <img src="https://picsum.photos/600/400?random=1" alt="Portfolio placeholder 1">
+            <figcaption>[Image description] — <em>[Source / Credit]</em></figcaption>
+          </figure>
+          <figure class="media-card">
+            <img src="https://picsum.photos/600/400?random=2" alt="Portfolio placeholder 2">
+            <figcaption>[Image description] — <em>[Source / Credit]</em></figcaption>
+          </figure>
+          <figure class="media-card">
+            <img src="https://picsum.photos/600/400?random=3" alt="Portfolio placeholder 3">
+            <figcaption>[Image description] — <em>[Source / Credit]</em></figcaption>
+          </figure>
+          <figure class="media-card">
+            <img src="https://picsum.photos/600/400?random=4" alt="Portfolio placeholder 4">
+            <figcaption>[Image description] — <em>[Source / Credit]</em></figcaption>
+          </figure>
+          <figure class="media-card">
+            <img src="https://picsum.photos/600/400?random=5" alt="Portfolio placeholder 5">
+            <figcaption>[Image description] — <em>[Source / Credit]</em></figcaption>
+          </figure>
+        </div>
+        <div class="extras-grid">
+          <div class="infographic-placeholder">
+            <p>Your Infographic / Graphic Organizer Goes Here</p>
+          </div>
+          <div class="embed-card">
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video placeholder" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="credits" class="slide footer-slide">
+      <div class="section-content fade-in">
+        <h2>Credits</h2>
+        <p>Created by [Your Name]</p>
+        <p>[Course Name &amp; Section]</p>
+        <p>[Ethical sourcing statement — include where your media came from and how credits are provided.]</p>
+      </div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
