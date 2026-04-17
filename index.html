@@ -1,73 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anthony Alejos | Writing Portfolio</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multimodal Portfolio Editor</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="app-shell">
+    <header class="top-toolbar" aria-label="Editor toolbar">
+      <div class="toolbar-group">
+        <button id="add-text-btn" type="button">Add Text</button>
+        <button id="add-image-btn" type="button">Add Image</button>
+        <input id="image-input" type="file" accept="image/*" hidden>
+      </div>
 
-<header>
-<h1>Anthony Alejos: Revision Portfolio</h1>
-<p>English 113 | Professor Caroline Zamudio</p>
-</header>
+      <div class="toolbar-group">
+        <button id="bold-btn" type="button" title="Bold"><strong>B</strong></button>
+        <button id="italic-btn" type="button" title="Italic"><em>I</em></button>
+        <button id="underline-btn" type="button" title="Underline"><u>U</u></button>
+        <label>
+          Size
+          <select id="font-size-select" aria-label="Font size">
+            <option value="14">14</option>
+            <option value="16" selected>16</option>
+            <option value="20">20</option>
+            <option value="24">24</option>
+            <option value="32">32</option>
+          </select>
+        </label>
+        <label>
+          Text Color
+          <input id="text-color-input" type="color" value="#111111" aria-label="Text color">
+        </label>
+      </div>
 
-<nav>
-<a href="#evaluation">Evaluation</a>
-<a href="#argument">Argument</a>
-<a href="#literary">Literary Analysis</a>
-</nav>
+      <div class="toolbar-group">
+        <label>
+          Background
+          <input id="background-color-input" type="color" value="#ffffff" aria-label="Slide background color">
+        </label>
+        <button id="delete-btn" type="button" disabled>Delete</button>
+        <button id="save-btn" type="button">Save</button>
+        <button id="export-btn" type="button">Export</button>
+      </div>
+    </header>
 
-<main class="container">
+    <main class="editor-layout">
+      <aside class="slide-panel" aria-label="Slides">
+        <h2>Slides</h2>
+        <div id="slide-list" class="slide-list"></div>
+      </aside>
 
-<section id="literary" class="essay-section">
-<div class="section-header">
-<h2>Literary Analysis: Trauma and Memory</h2>
-<span class="status-tag">Completed</span>
-</div>
+      <section class="canvas-stage" aria-label="Canvas stage">
+        <div id="slide-canvas" class="slide-canvas"></div>
+      </section>
+    </main>
+  </div>
 
-<div class="revision-card">
-<h3>Stage 1: Initial Draft</h3>
-<p>In the initial stage of my Literary Analysis essay, I focused on establishing the central conflict between Daniel Nayeri's identity and his American environment. My primary goal was to introduce the concept of "mythic embroidery" and how Nayeri uses it to combat the simple "bullet list of terrors" that his classmates see. I spent this draft identifying the key narrative structure—the "braided pattern"—and laying the groundwork for how sensory details like the "blood-red pomegranate" act as bridges between Daniel's Persian past and his Oklahoma present.</p>
-</div>
-
-<div class="revision-card">
-<h3>Stage 2: Submitted Draft</h3>
-<p>For the version submitted for grading, I shifted my focus toward the intentionality of the novel's "messiness". I refined my explanation of the nonlinear structure, arguing that the constant interruptions—modeled after the 1,001 Nights—are a purposeful tactic to dismantle "objective" Western history. I strengthened the essay by incorporating specific page citations and expanding the analysis of how memory "ambushes" the survivor, ensuring that my claims about trauma were supported by the text's actual pacing and style.</p>
-</div>
-
-<div class="revision-card">
-<h3>Stage 3: Final Revised Draft</h3>
-<p>In the final revision, I focused on the "spiritual landscape" of the novel and the mythic portrayal of the narrator's mother, Sima. I polished the prose to better contrast the "tragedy of the flesh" with the "celebration of spirit," ensuring the conclusion clearly framed the family's struggle as a "hero's journey" comparable to the Odyssey. This final stage involved tightening my analysis of how Sima's faith surpasses her suffering, ultimately proving the novel's title: that through well-told stories, "everything sad is untrue".</p>
-</div>
-</section>
-
-<section id="evaluation" class="essay-section">
-<div class="section-header">
-<h2>Evaluation Essay: Starbucks Study Environment</h2>
-<span class="status-tag pending">Drafting Needed</span>
-</div>
-<div class="revision-card placeholder">
-<p>Click here to paste your 3 revision paragraphs for the Evaluation Essay (Rough to Final).</p>
-</div>
-</section>
-
-<section id="argument" class="essay-section">
-<div class="section-header">
-<h2>Argument Essay: Residential vs. Commuter Life</h2>
-<span class="status-tag pending">Drafting Needed</span>
-</div>
-<div class="revision-card placeholder">
-<p>Click here to paste your 3 revision paragraphs for the Argument Essay (Rough to Final).</p>
-</div>
-</section>
-
-</main>
-
-<footer>
-<p>&copy; 2026 Anthony Alejos | CBU Composition Portfolio</p>
-</footer>
-
+  <script src="app.js"></script>
 </body>
 </html>
