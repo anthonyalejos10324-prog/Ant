@@ -50,9 +50,9 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at 10% 15%, rgba(124, 92, 255, 0.2) 0 120px, transparent 121px),
-    radial-gradient(circle at 80% 25%, rgba(0, 194, 168, 0.2) 0 140px, transparent 141px),
-    radial-gradient(circle at 70% 80%, rgba(255, 122, 89, 0.18) 0 180px, transparent 181px);
+  background-image: radial-gradient(circle at 10% 15%, rgba(124, 92, 255, 0.2) 0 min(16vw, 120px), transparent calc(min(16vw, 120px) + 1px)),
+    radial-gradient(circle at 80% 25%, rgba(0, 194, 168, 0.2) 0 min(18vw, 140px), transparent calc(min(18vw, 140px) + 1px)),
+    radial-gradient(circle at 70% 80%, rgba(255, 122, 89, 0.18) 0 min(24vw, 180px), transparent calc(min(24vw, 180px) + 1px));
   pointer-events: none;
 }
 

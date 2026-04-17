@@ -41,7 +41,7 @@ To publish this site:
 
 Your live link format will be:
 
-`https://anthonyalejos10324-prog.github.io/Ant/`
+`https://[your-username].github.io/[repository-name]/`
 
 ## Rubric Alignment
 
